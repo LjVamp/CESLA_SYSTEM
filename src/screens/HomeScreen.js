@@ -4,143 +4,171 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  StatusBar,
-  Dimensions,
+  ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const { width, height } = Dimensions.get('window');
-
 export default function HomeScreen({ navigation }) {
+  const { width } = useWindowDimensions();
+  const isWide = width >= 900;
+  const isTablet = width >= 700;
+  const isPhone = width < 480;
+
+  const titleSize = isWide ? 34 : isTablet ? 28 : isPhone ? 20 : 22;
+  const subtitleSize = isWide ? 13 : isPhone ? 11 : 12;
+  const cardMinHeight = isWide ? 180 : isTablet ? 160 : 130;
+
+  const cardStyleBase = {
+    minHeight: cardMinHeight,
+    paddingHorizontal: isWide ? 28 : isPhone ? 14 : 20,
+    marginHorizontal: isWide ? 10 : isPhone ? 6 : 8,
+    flexBasis: isWide ? '48%' : isTablet ? '48%' : '100%',
+    alignSelf: isPhone ? 'stretch' : 'center'
+  };
+
   return (
     <LinearGradient
-      colors={['#5B7FDB', '#7B5FBF', '#8B4FA8']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
+      colors={['#6c7bff', '#7a4bb1']}
+      start={[0, 0]}
+      end={[1, 1]}
+      style={styles.gradient}
     >
-      <StatusBar barStyle="light-content" />
-      
-      {/* Header - Fixed at top */}
-      <View style={styles.header}>
-        <Text style={styles.title}>CLIMBS Life and General Insurance Cooperative</Text>
-        <Text style={styles.subtitle}>System Portal</Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={[styles.title, { fontSize: titleSize }]}>CESLA MULTI-PURPOSE COOPERATIVE</Text>
+        <Text style={[styles.subtitle, { fontSize: subtitleSize }]}>System Portal</Text>
 
-      {/* Portal Cards - Centered */}
-      <View style={styles.centerWrapper}>
-        <View style={styles.cardsContainer}>
-          {/* Membership Portal Card */}
-          <View style={styles.card}>
+        <View style={[styles.cardsRow, !isWide && styles.cardsColumn, { justifyContent: isWide ? 'space-between' : 'center' }]}>
+          <View style={[styles.card, cardStyleBase]}>
             <Text style={styles.cardTitle}>Membership Portal</Text>
-            <Text style={styles.cardDescription}>
-              Register or login as member/admin
+            <Text style={styles.cardDesc}>
+              Savings, Share Capital, Loans — register or sign in
             </Text>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('Membership')}
+              onPress={() => navigation?.navigate?.('MembershipPortal')}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>Go to Membership</Text>
             </TouchableOpacity>
+            <Text style={styles.footerNote}>
+              Login → Member Dashboard (savings, share capital, loans)
+            </Text>
           </View>
 
-          {/* Ordering System Card */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Ordering System</Text>
-            <Text style={styles.cardDescription}>
-              Employee food ordering system
-            </Text>
+          <View style={[styles.card, cardStyleBase]}>
+            <Text style={styles.cardTitle}>CANTEEN MANAGEMENT SYSTEM</Text>
+            <Text style={styles.cardDesc}>Employee food ordering system</Text>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('Ordering')}
+              onPress={() => navigation?.navigate?.('Ordering')}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>Go to Ordering</Text>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-  },
-  header: {
-    alignItems: 'center',
-    paddingTop: 60,
-    paddingBottom: 20,
-  },
-  title: {
-    fontSize: width > 768 ? 36 : 28,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 8,
-    paddingHorizontal: 40,
-  },
-  subtitle: {
-    fontSize: width > 768 ? 18 : 16,
-    color: '#FFFFFF',
-    opacity: 0.95,
-  },
-  centerWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: "center",
+    paddingTop: 50,
     paddingHorizontal: 20,
   },
-  cardsContainer: {
-    flexDirection: width > 768 ? 'row' : 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 30,
-    maxWidth: 1200,
-    width: '100%',
+  title: {
+    color: "#fff",
+    fontSize: 34,
+    fontWeight: "900",
+    textAlign: "center",
+    marginTop: 6,
+    letterSpacing: 0.8,
+  },
+  subtitle: {
+    color: "#f5f5ff",
+    marginTop: 6,
+    marginBottom: 24,
+    fontSize: 13,
+  },
+  cardsRow: {
+    width: "100%",
+    maxWidth: 1100,
+    flexDirection: "row",
+    flexWrap: 'wrap',
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    alignSelf: "center",
+    paddingHorizontal: 6,
+  },
+  cardsColumn: {
+    flexDirection: "column",
+    width: "100%",
+    alignItems: "stretch",
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 40,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    paddingVertical: 20,
+    flex: 1,
+    width: '100%',
+    maxWidth: 520,
+    minHeight: 180,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.14,
+    shadowRadius: 20,
     elevation: 10,
-    minWidth: width > 768 ? 400 : width - 80,
-    maxWidth: width > 768 ? 500 : width - 80,
+    marginBottom: 18,
+    marginHorizontal: 10,
+  },
+  scrollContainer: {
+    flexGrow: 1,
     alignItems: 'center',
+    paddingTop: 40,
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
   cardTitle: {
-    fontSize: 26,
-    fontWeight: '600',
-    color: '#5B7FDB',
-    marginBottom: 16,
-    textAlign: 'center',
+    color: "#3e55b8",
+    fontSize: 20,
+    fontWeight: "800",
+    textAlign: "center",
+    marginBottom: 12,
   },
-  cardDescription: {
-    fontSize: 15,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 30,
-    lineHeight: 22,
+  cardDesc: {
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 18,
   },
   button: {
-    backgroundColor: '#5B7FDB',
-    paddingVertical: 14,
-    paddingHorizontal: 35,
-    borderRadius: 10,
+    alignSelf: "center",
+    backgroundColor: "#5f77e6",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    shadowColor: "#3b4bb3",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 6,
+    marginTop: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    color: "#fff",
+    fontWeight: "600",
+  },
+  footerNote: {
+    color: "#9b9b9b",
+    fontSize: 12,
+    textAlign: "center",
+    marginTop: 12,
   },
 });
+///mao ni bgo
